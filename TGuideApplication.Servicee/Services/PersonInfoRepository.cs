@@ -44,6 +44,7 @@ namespace TGuideApplication.Servicee.Services
             return await _context.PersonInfo.Find(x => true).ToListAsync();
         }
 
+
         public async Task<PersonInfo> GetDataAsync(string id)
         {
             var personInfo = Builders<PersonInfo>.Filter.Eq("Id", id);
