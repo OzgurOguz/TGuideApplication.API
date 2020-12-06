@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using TGuideApplication.Core.IMessageQueue;
 using TGuideApplication.Core.IRepository;
 using TGuideApplication.Core.Models;
+using TGuideApplication.Filters;
 using TGuideApplication.MessageQueue;
 
 namespace TGuideApplication.Controllers
@@ -36,6 +37,7 @@ namespace TGuideApplication.Controllers
             return JsonConvert.SerializeObject(personInfo);
         }
 
+        [ServiceFilter(typeof(NotFoundFilterPersonInfo))]
         [HttpGet("{id}")]
         public Task<string> GetById(string id)
         {
@@ -48,6 +50,7 @@ namespace TGuideApplication.Controllers
             return JsonConvert.SerializeObject(personInfo);
         }
 
+        [ValidationFilter]
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] PersonInfo personInfo)
         {
@@ -57,16 +60,18 @@ namespace TGuideApplication.Controllers
             return Created(String.Empty, personInfo);
         }
 
+        [ValidationFilter]
+        [ServiceFilter(typeof(NotFoundFilterPersonInfo))]
         [HttpPut("{id}")]
         public async Task<string> Update(string id, [FromBody] PersonInfo personInfo)
         {
-            if (string.IsNullOrEmpty(id)) return "Invalid id";
             await _personInfoRepository.UpdateDataAsync(id, personInfo);
             _publisher.Publisher();
 
             return "Updated";
         }
 
+        [ServiceFilter(typeof(NotFoundFilterPersonInfo))]
         [HttpDelete("{id}")]
         public async Task<string> Delete(string id)
         {

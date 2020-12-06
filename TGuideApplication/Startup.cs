@@ -1,12 +1,14 @@
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TGuideApplication.Core.DbModels;
 using TGuideApplication.Core.IMessageQueue;
 using TGuideApplication.Core.IRepository;
+using TGuideApplication.Filters;
 using TGuideApplication.MessageQueue;
 using TGuideApplication.Servicee.Services;
 
@@ -26,11 +28,17 @@ namespace TGuideApplication
         {
 
 
+            services.AddScoped<NotFoundFilterPersonInfo>();
             services.Configure<Settings>(o => { o.IConfigurationRoot = (IConfigurationRoot)Configuration; });
             services.AddScoped<IPersonInfoRepository, PersonInfoRepository>();
             services.AddScoped<ITGuidePublisherModelRepository, TGuidePublisherModelRepository>();
             services.AddScoped<IPublisher, TGuidePublisher>();
             services.AddControllers();
+
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
             // services.AddMassTransit(config =>
             //{
             //    config.UsingRabbitMq((ctx, cfg) =>

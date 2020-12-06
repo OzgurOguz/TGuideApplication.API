@@ -2,6 +2,7 @@
 using MongoDB.Bson.Serialization.Attributes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace TGuideApplication.Core.Models
@@ -12,6 +13,7 @@ namespace TGuideApplication.Core.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string Id { get; set; }
 
+        [Required(ErrorMessage = "{0} alanı gereklidir")]
         public string UUID { get; set; }
 
         public string Name { get; set; }
