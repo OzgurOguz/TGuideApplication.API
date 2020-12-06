@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using TGuideApplication.Core.IRepository;
 using TGuideApplication.Core.Models;
 using TGuideApplication.MessageQueue;
+using TGuideApplication.Servicee.Services;
 
 namespace TGuideApplication.Controllers
 {
@@ -14,10 +16,15 @@ namespace TGuideApplication.Controllers
     public class PersonInfoController : Controller
     {
         private readonly IPersonInfoRepository _personInfoRepository;
+       // private readonly IPublishEndpoint _publishEndpoint;
+       // private readonly IBusControl _bus;
+        public IPublisher _publisher;
 
-        public PersonInfoController(IPersonInfoRepository personInfoRepository)
+        public PersonInfoController(  IPersonInfoRepository personInfoRepository, IPublisher publisher)
         {
-            _personInfoRepository = personInfoRepository;
+            this._personInfoRepository = personInfoRepository;
+          //  this._publishEndpoint = publishEndpoint;
+            this._publisher = publisher;
         }
 
         [HttpGet]
@@ -51,6 +58,8 @@ namespace TGuideApplication.Controllers
         public async Task<IActionResult> Create([FromBody] PersonInfo personInfo)
         {
             await _personInfoRepository.AddDataAsync(personInfo);
+            _publisher.Publisher();
+
             return Created(String.Empty, personInfo);
         }
 

@@ -15,8 +15,8 @@ namespace TGuideApplication.MessageQueue
     public class TGuidePublisher : IPublisher
     {
 
-        public TGuidePublisherModelRepository _tGuidePublisherModelRepository;
-        public TGuidePublisher(TGuidePublisherModelRepository tGuidePublisherModelRepository)
+        public ITGuidePublisherModelRepository _tGuidePublisherModelRepository;
+        public TGuidePublisher(ITGuidePublisherModelRepository tGuidePublisherModelRepository)
         {
             _tGuidePublisherModelRepository = tGuidePublisherModelRepository;
         }
@@ -32,7 +32,7 @@ namespace TGuideApplication.MessageQueue
                 {
                     channel.QueueDeclare("TGuide-Info", true,false,false,null);
 
-                    String mesage = JsonConvert.SerializeObject(_tGuidePublisherModelRepository.TGuidePublisherModelRepositoryData());
+                    String mesage = JsonConvert.SerializeObject(_tGuidePublisherModelRepository.TGuidePublisherModelRepositoryData( ));
                     var byteMessage = System.Text.Encoding.UTF8.GetBytes(mesage);
 
                     channel.BasicPublish("", "TGuide-Info", false, null,byteMessage);

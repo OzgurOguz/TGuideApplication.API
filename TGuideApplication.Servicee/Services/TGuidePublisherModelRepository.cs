@@ -24,9 +24,12 @@ namespace TGuideApplication.Servicee.Services
 
         public List<TGuidePublisherModel> TGuidePublisherModelRepositoryData()
         {
+
             var communicationData = _context.PersonInfo.Aggregate().Unwind("CommunicationInfo").Project(new BsonDocument() { { "_id", 0 }, { "TelNo", "$CommunicationInfo.CommunicationType.TelNo" }, { "Email", "$CommunicationInfo.CommunicationType.Email" }, { "Location", "$CommunicationInfo.CommunicationType.Location" } });
             var communicationDataList = communicationData.ToListAsync().Result;
-            var communicationDataObj = JsonConvert.DeserializeObject(communicationDataList.ToJson());
+            var communicationDataListDistinct = communicationDataList.ToList().Select(x => x.GetElement("Location")).ToList().Distinct().ToList();
+            var communicationDataObj = JsonConvert.DeserializeObject(communicationDataListDistinct.ToJson());
+
 
             List<TGuidePublisherModel> communicationType = new List<TGuidePublisherModel>();
             List<PersonInfo> personInfo = _context.PersonInfo.Find(x => true).ToList();
@@ -35,9 +38,9 @@ namespace TGuideApplication.Servicee.Services
             foreach (var item in jArray.Root)
             {
                 TGuidePublisherModel c = new TGuidePublisherModel();
-                c.Location = item["Location"].First.ToString();
-                c.NumberOfPersonLocated = personInfo.Select(c => c.CommunicationInfo.SelectMany(bb => bb.CommunicationType).Where(b => b.Location == item["Location"].First.ToString())).Count();
-                c.NumberOfTelLocated = personInfo.SelectMany(tt => tt.CommunicationInfo.SelectMany(a => a.CommunicationType).Where(b => b.Location == item["Location"].First.ToString())).Count();
+                c.Location = item["Value"].First().ToString();
+                c.NumberOfPersonLocated = personInfo.Select(c => c.CommunicationInfo.SelectMany(bb => bb.CommunicationType).Where(b => b.Location == item["Value"].First.ToString())).Count();
+                c.NumberOfTelLocated = personInfo.SelectMany(tt => tt.CommunicationInfo.SelectMany(a => a.CommunicationType).Where(b => b.Location == item["Value"].First.ToString())).Count();
               
                 communicationType.Add(c);
             }
