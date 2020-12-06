@@ -41,7 +41,7 @@ namespace TGuideApplication.Servicee.Services
                 c.Location = item["Value"].First().ToString();
                 c.NumberOfPersonLocated = personInfo.Select(c => c.CommunicationInfo.SelectMany(bb => bb.CommunicationType).Where(b => b.Location == item["Value"].First.ToString())).Count();
                 c.NumberOfTelLocated = personInfo.SelectMany(tt => tt.CommunicationInfo.SelectMany(a => a.CommunicationType).Where(b => b.Location == item["Value"].First.ToString())).Count();
-              
+
                 communicationType.Add(c);
             }
 

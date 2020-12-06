@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using TGuideApplication.Core.IMessageQueue;
 using TGuideApplication.Core.IRepository;
 using TGuideApplication.Core.Models;
 using TGuideApplication.MessageQueue;
-using TGuideApplication.Servicee.Services;
 
 namespace TGuideApplication.Controllers
 {
@@ -16,14 +13,11 @@ namespace TGuideApplication.Controllers
     public class PersonInfoController : Controller
     {
         private readonly IPersonInfoRepository _personInfoRepository;
-       // private readonly IPublishEndpoint _publishEndpoint;
-       // private readonly IBusControl _bus;
         public IPublisher _publisher;
 
-        public PersonInfoController(  IPersonInfoRepository personInfoRepository, IPublisher publisher)
+        public PersonInfoController(IPersonInfoRepository personInfoRepository, IPublisher publisher)
         {
             this._personInfoRepository = personInfoRepository;
-          //  this._publishEndpoint = publishEndpoint;
             this._publisher = publisher;
         }
 
@@ -68,7 +62,9 @@ namespace TGuideApplication.Controllers
         {
             if (string.IsNullOrEmpty(id)) return "Invalid id";
             await _personInfoRepository.UpdateDataAsync(id, personInfo);
-            return "Ok";
+            _publisher.Publisher();
+
+            return "Updated";
         }
 
         [HttpDelete("{id}")]
@@ -76,17 +72,19 @@ namespace TGuideApplication.Controllers
         {
             if (string.IsNullOrEmpty(id)) return "Invalid id";
             await _personInfoRepository.DeleteDataAsync(id);
-            return "Ok";
-        }
+            _publisher.Publisher();
 
+            return "Deleted";
+        }
 
         [HttpDelete]
         public async Task<string> DeleteAll()
         {
             await _personInfoRepository.DeleteAllDataAsync();
-            return "";
-        }
+            _publisher.Publisher();
 
+            return "Deleted";
+        }
 
     }
 }

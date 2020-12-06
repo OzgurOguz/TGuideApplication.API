@@ -9,6 +9,5 @@ namespace TGuideApplication.Core.Models
         public string Location { get; set; }
         public int NumberOfPersonLocated { get; set; }
         public int NumberOfTelLocated { get; set; }
-
     }
 }

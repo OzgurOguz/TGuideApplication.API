@@ -1,17 +1,11 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using MassTransit;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using MongoDB.Driver;
 using TGuideApplication.Core.DbModels;
+using TGuideApplication.Core.IMessageQueue;
 using TGuideApplication.Core.IRepository;
 using TGuideApplication.MessageQueue;
 using TGuideApplication.Servicee.Services;
@@ -37,20 +31,20 @@ namespace TGuideApplication
             services.AddScoped<ITGuidePublisherModelRepository, TGuidePublisherModelRepository>();
             services.AddScoped<IPublisher, TGuidePublisher>();
             services.AddControllers();
-           // services.AddMassTransit(config =>
-           //{
-           //    config.UsingRabbitMq((ctx, cfg) =>
-           //    {
-           //        cfg.Host("amqps://nohtjnhs:ov2OEjCyIJuw09Oum-bmsed6Fx_DPGFm@jaguar.rmq.cloudamqp.com/nohtjnhs");
-           //    });
+            // services.AddMassTransit(config =>
+            //{
+            //    config.UsingRabbitMq((ctx, cfg) =>
+            //    {
+            //        cfg.Host("amqps://nohtjnhs:ov2OEjCyIJuw09Oum-bmsed6Fx_DPGFm@jaguar.rmq.cloudamqp.com/nohtjnhs");
+            //    });
 
-           //});
-           // services.AddMassTransitHostedService();
+            //});
+            // services.AddMassTransitHostedService();
 
-         }
+        }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-            public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {

@@ -57,8 +57,5 @@ namespace TGuideApplication.Servicee.Services
             return "";
         }
 
-
-  
-
     }
 }

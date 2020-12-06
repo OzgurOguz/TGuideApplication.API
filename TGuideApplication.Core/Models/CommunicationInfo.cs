@@ -8,9 +8,7 @@ namespace TGuideApplication.Core.Models
 {
     public class CommunicationInfo
     {
-
         public string Info { get; set; }
         public ICollection<CommunicationType> CommunicationType { get; set; }
-
     }
 }
